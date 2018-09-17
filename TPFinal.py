@@ -1,5 +1,7 @@
 #! /usr/bin/python
-
+# 122.61841744998426, 117.74176270665362), (120.33479569587917, 121.67619536734071)]
+# [(112.89949801956922, 134.48640702652528), (125.20232923322665, 113.28996288733241)]
+#
 # 6ta Practica Laboratorio 
 # Complementos Matematicos I
 # Sebastian Zimmermann
@@ -31,10 +33,12 @@ def vers(x):
   #~ return 900 / x
 
 def fa(x,k):
-  return (x**2)/(math.sqrt(Lng)*x)
+  #~ print(k)
+  return (x)/k
   
 def fr(x,k):
-  return (Lng/x)
+  x = max (2,x)
+  return (k/x**2)
   
 
 def leer_grafo_consola():
@@ -93,19 +97,26 @@ def calculador_fuerzas(g,it):
     disp.append((0,0))
   
   while True:   
-    for i in range(len(V)): #Repulsion
+    print(pos)
+    
+    for i in range(len(V)):
       disp[i] = (0,0)
+    
+    for i in range(len(V)): #Repulsion
       for j in range(len(V)):
         if j!=i:
           u1,u2 = pos[j]
           v1,v2 = pos[i]
           delta = u1-v1,u2-v2
           d = modd(delta)
-          print(d)
+          #~ print(d)
           if(d>Eps): # karupayun: Tener en cuenta que esto puede llegar a ser un problema.
             versor = vers(delta)
-            disp[i] = (disp[i][0] + versor[0] * fr(d,k), disp[i][1] + versor[1] * fr(d,k))
-            disp[j] = (disp[j][0] - versor[0] * fr(d,k), disp[j][1] - versor[1] * fr(d,k))
+            #~ print (disp[i])
+            disp[i] = (disp[i][0] - versor[0] * fr(d,k), disp[i][1] - versor[1] * fr(d,k))
+            disp[j] = (disp[j][0] + versor[0] * fr(d,k), disp[j][1] + versor[1] * fr(d,k))
+            #~ print (disp[i])
+
 
           
     for i in range(len(V)): #Atraccion
@@ -121,8 +132,10 @@ def calculador_fuerzas(g,it):
           #~ print(d)
           if (d > Eps):
             versor = vers(delta)
+            #~ print (disp[i])
             disp[i] = (disp[i][0] - versor[0] * fa(d,k), disp[i][1] - versor[1] * fa(d,k))
             disp[j] = (disp[j][0] + versor[0] * fa(d,k), disp[j][1] + versor[1] * fa(d,k))
+            #~ print (disp[i])
 
     for v in range(len(V)):
       (x,y) = pos[v]
@@ -135,12 +148,12 @@ def calculador_fuerzas(g,it):
         y = max(0 , min(Lng,y))
         pos[v] = (x,y)
     
-    #~ for v in range(len(V)): #Centralizador
-      #~ u=(Lng/2-pos[v][0],Lng/2-pos[v][1])
-      #~ d=modd(u)
-      #~ if d>(1/Lng):
-        #~ versor=[u[0]/d,u[1]/d]
-        #~ disp[v] = (disp[v][0]+(versor[0]/(Lng*0.10)), disp[v][1]+(versor[1]/(Lng*0.10)))
+    for v in range(len(V)): #Centralizador
+      u=(Lng/2-pos[v][0],Lng/2-pos[v][1])
+      d=modd(u)
+      if d>(1/Lng):
+        versor=[u[0]/d,u[1]/d]
+        disp[v] = (disp[v][0]+(versor[0]/(Lng*0.10)), disp[v][1]+(versor[1]/(Lng*0.10)))
       
     
     t = t - cool
